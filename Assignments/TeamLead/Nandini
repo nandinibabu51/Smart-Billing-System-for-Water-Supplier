@@ -1,0 +1,43 @@
+#include <DHT.h>
+
+#define DHTPIN 2          // DHT22 sensor pin
+#define DHTTYPE DHT22     // DHT22 sensor type
+
+DHT dht(DHTPIN, DHTTYPE);
+
+const int pirSensorPin = 3; // PIR sensor pin
+const int ledPin = 4;       // LED pin
+const int buzzerPin = 5;    // Buzzer pin
+
+
+void setup() {
+  pinMode(pirSensorPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+
+  Serial.begin(9600);
+  dht.begin();
+}
+
+void loop() {
+  int pirSensorReading = digitalRead(pirSensorPin);
+
+  if (pirSensorReading == HIGH) {
+    digitalWrite(ledPin, HIGH);
+    digitalWrite(buzzerPin, HIGH);
+    delay(500);
+    digitalWrite(ledPin, LOW);
+    digitalWrite(buzzerPin, LOW);
+  }
+
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
+  
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.print("C, Humidity: ");
+  Serial.print(humidity);
+  Serial.println("%");
+
+  delay(1000);
+}
